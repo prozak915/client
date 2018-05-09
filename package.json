@@ -4,7 +4,7 @@
   "author": "nOS",
   "version": "0.2.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "build/main.js",
   "license": "MIT",
   "dependencies": {
     "@cityofzion/neon-js": "3.8.1",
@@ -40,12 +40,15 @@
     "what-input": "5.0.5"
   },
   "scripts": {
-    "start": "concurrently -r \"yarn run start-react\" \"wait-on http://localhost:5000/ && yarn run start-electron\" --kill-others --success first",
-    "build": "react-app-rewired build",
+    "start": "concurrently -r \"yarn run start:renderer\" \"wait-on http://localhost:5000/ && yarn run start:electron\" --kill-others --success first",
+    "start:main": "cross-env BROWSER=none react-app-rewired start --config-overrides config/main-overrides.js",
+    "start:renderer": "cross-env BROWSER=none PORT=5000 react-app-rewired start --config-overrides config/renderer-overrides.js",
+    "start:electron": "yarn run build:main && cross-env ELECTRON_START_URL=http://localhost:5000/ electron .",
+    "build": "yarn run build:main && yarn run build:renderer",
+    "build:main": "react-app-rewired build --config-overrides config/main-overrides.js",
+    "build:renderer": "react-app-rewired build --config-overrides config/renderer-overrides.js",
     "pretest": "yarn run lint",
-    "test": "react-app-rewired test --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
-    "start-react": "cross-env PORT=5000 BROWSER=none react-app-rewired start",
-    "start-electron": "cross-env ELECTRON_START_URL=http://localhost:5000/ electron .",
+    "test": "react-app-rewired test --config-overrides config/renderer-overrides.js --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
     "pack": "yarn run build && electron-builder --dir",
     "dist": "yarn run build && cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder",
     "lint": "eslint --env browser,node,server --ext .jsx,.js --color .",
@@ -57,6 +60,7 @@
     "autoprefixer": "8.6.0",
     "babel-eslint": "8.2.2",
     "babel-plugin-module-resolver": "3.1.1",
+    "babel-plugin-syntax-dynamic-import": "6.18.0",
     "concurrently": "3.5.1",
     "cross-env": "5.1.3",
     "electron": "2.0.0",
@@ -76,7 +80,7 @@
     "node-loader": "0.6.0",
     "node-sass": "4.7.2",
     "postcss-flexbugs-fixes": "3.3.0",
-    "react-app-rewired": "1.4.1",
+    "react-app-rewired": "1.5.2",
     "react-router-test-context": "0.1.0",
     "react-scripts": "1.1.1",
     "redux-devtools-extension": "2.13.2",
@@ -94,7 +98,8 @@
     },
     "directories": {
       "buildResources": "public"
-    }
+    },
+    "extends": null
   },
   "homepage": "./",
   "greenkeeper": {

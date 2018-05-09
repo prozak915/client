@@ -1,14 +1,18 @@
-const electron = require('electron');
-const isDev = require('electron-is-dev');
-const path = require('path');
-const url = require('url');
+import { app, protocol, session, BrowserWindow } from 'electron';
+import isDev from 'electron-is-dev';
+import path from 'path';
+import url from 'url';
 
-const registerNosProtocol = require('./registerNosProtocol');
-const pkg = require('../package.json');
-
-const { app, protocol, session, BrowserWindow } = electron;
+import registerNosProtocol from './util/registerNosProtocol';
+import registerAboutProtocol from './util/registerAboutProtocol';
+import pkg from '../../package.json';
 
 protocol.registerStandardSchemes(['nos']);
+
+function registerProtocol() {
+  registerNosProtocol();
+  registerAboutProtocol();
+}
 
 function injectHeaders() {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
@@ -99,7 +103,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  registerNosProtocol();
+  registerProtocol();
   injectHeaders();
 
   if (isDev) {
