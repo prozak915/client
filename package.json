@@ -4,7 +4,7 @@
   "author": "nOS",
   "version": "0.2.0",
   "private": true,
-  "main": "build/main.js",
+  "main": "build/static/js/main.bundle.js",
   "license": "MIT",
   "dependencies": {
     "@cityofzion/neon-js": "3.8.1",
@@ -40,11 +40,11 @@
     "what-input": "5.0.5"
   },
   "scripts": {
-    "start": "concurrently -r \"yarn run start:renderer\" \"wait-on http://localhost:5000/ && yarn run start:electron\" --kill-others --success first",
+    "start": "yarn run build:main && concurrently -r \"yarn run start:renderer\" \"wait-on http://localhost:3000/ && && yarn run start:electron\" --kill-others --success first",
     "start:main": "cross-env BROWSER=none react-app-rewired start --config-overrides config/main-overrides.js",
     "start:renderer": "cross-env BROWSER=none PORT=5000 react-app-rewired start --config-overrides config/renderer-overrides.js",
-    "start:electron": "yarn run build:main && cross-env ELECTRON_START_URL=http://localhost:5000/ electron .",
-    "build": "yarn run build:main && yarn run build:renderer",
+    "start:electron": "yarn run build:main && cross-env ELECTRON_START_URL=http://localhost:3000/ electron .",
+    "build": "yarn run build:main && mv build build-main && yarn run build:renderer && cp -R build-main/* build/. && rimraf build-main",
     "build:main": "react-app-rewired build --config-overrides config/main-overrides.js",
     "build:renderer": "react-app-rewired build --config-overrides config/renderer-overrides.js",
     "pretest": "yarn run lint",
