@@ -8,8 +8,6 @@
 
 # production
 /build
-/build-main
-/build-renderer
 /dist
 /nos-*.tgz
 
