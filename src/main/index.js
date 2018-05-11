@@ -72,14 +72,14 @@ function createWindow() {
 
   splashWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, 'splash.html'),
+      pathname: path.join(__dirname, isDev ? '../../splash.html' : '../../build/splash.html'),
       protocol: 'file:',
       slashes: true
     })
   );
 
   mainWindow.loadURL(process.env.ELECTRON_START_URL || url.format({
-    pathname: path.join(__dirname, isDev ? '../build/index.html' : '../../index.html'),
+    pathname: path.join(__dirname, isDev ? '../../index.html' : '../../build/index.html'),
     protocol: 'file:',
     slashes: true
   }));

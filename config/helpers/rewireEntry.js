@@ -2,6 +2,9 @@ const merge = require('webpack-merge');
 const { paths } = require('react-app-rewired');
 
 function updateReactScriptPath(filename) {
+  // ensure that react-script has loaded before trying to resolve it
+  require('react-scripts/config/paths.js'); // eslint-disable-line global-require
+
   const originalPaths = require.cache[
     require.resolve(`${paths.scriptVersion}/config/paths.js`)
   ];
@@ -11,7 +14,7 @@ function updateReactScriptPath(filename) {
   });
 }
 
-module.exports = function rewireEntry(name, filename) {
+module.exports = function rewireEntry(name, filename, format = (path) => path) {
   return (config, _env) => {
     updateReactScriptPath(filename);
 
@@ -27,7 +30,8 @@ module.exports = function rewireEntry(name, filename) {
       }
     }, {
       output: {
-        filename: 'static/js/[name].bundle.js'
+        filename: format('static/js/[name].bundle.js'),
+        chunkFilename: format('static/js/[name].chunk.js')
       }
     });
   };

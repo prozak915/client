@@ -1,17 +1,32 @@
+/* eslint-disable global-require */
+
 const path = require('path');
-const { compose, injectBabelPlugin } = require('react-app-rewired');
+const { compose } = require('react-app-rewired');
 
 const rewireEntry = require('./helpers/rewireEntry');
+const rewireNode = require('./helpers/rewireNode');
 const injectTarget = require('./helpers/injectTarget');
 const injectExternal = require('./helpers/injectExternal');
+const injectDynamicImport = require('./helpers/injectDynamicImport');
+const removePlugin = require('./helpers/removePlugin');
 
-function injectDynamicImport(config, _env) {
-  return injectBabelPlugin('syntax-dynamic-import', config);
+const env = process.env.NODE_ENV || 'development';
+
+function getConfig() {
+  if (env === 'development') {
+    return require('react-scripts/config/webpack.config.dev');
+  } else {
+    return require('react-scripts/config/webpack.config.prod');
+  }
 }
 
 module.exports = compose(
-  rewireEntry('main', path.resolve(__dirname, '../src/main/index.js')),
+  rewireNode,
+  rewireEntry('main', path.resolve(__dirname, '../src/main/index.js'), (filename) => (
+    path.join(env === 'production' ? '' : 'build', filename)
+  )),
   injectTarget('electron-main'),
   injectExternal('@cityofzion/neon-js'),
-  injectDynamicImport
-);
+  injectDynamicImport,
+  removePlugin('HtmlWebpackPlugin')
+)(getConfig(), env);
