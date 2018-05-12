@@ -1,18 +1,6 @@
 const merge = require('webpack-merge');
-const { paths } = require('react-app-rewired');
 
-function updateReactScriptPath(filename) {
-  // ensure that react-script has loaded before trying to resolve it
-  require('react-scripts/config/paths.js'); // eslint-disable-line global-require
-
-  const originalPaths = require.cache[
-    require.resolve(`${paths.scriptVersion}/config/paths.js`)
-  ];
-
-  Object.assign(originalPaths.exports, {
-    appIndexJs: filename
-  });
-}
+const updateReactScriptPath = require('./updateReactScriptPath');
 
 module.exports = function rewireEntry(name, filename, format = (path) => path) {
   return (config, _env) => {

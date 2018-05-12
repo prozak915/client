@@ -8,6 +8,7 @@ const injectTarget = require('./helpers/injectTarget');
 const injectPublicPath = require('./helpers/injectPublicPath');
 const injectBabelRC = require('./helpers/injectBabelRC');
 const injectExternal = require('./helpers/injectExternal');
+const removePlugin = require('./helpers/removePlugin');
 
 module.exports = compose(
   rewireNode,
@@ -17,5 +18,6 @@ module.exports = compose(
   injectBabelRC(path.resolve(__dirname, '../.babelrc')),
   injectTarget('electron-renderer'),
   injectExternal('@cityofzion/neon-js'),
-  injectExternal('node-hid')
+  injectExternal('node-hid'),
+  removePlugin('HtmlWebpackPlugin')
 );
