@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const isProd = process.env.NODE_ENV === 'production';
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 const styleLoaders = [
   isProd ? MiniCssExtractPlugin.loader : 'style-loader',
@@ -178,7 +178,7 @@ export default {
     filename: 'static/js/[name].bundle.js',
     chunkFilename: 'static/js/[name].chunk.js',
     // Webpack needs to know the public path for injecting the right <script> hrefs into HTML.
-    publicPath: `http://localhost:${port}/dist/`,
+    publicPath: '/',
     // Point sourcemap entries to original disk location.  (Format as URL on Windows.)
     devtoolModuleFilenameTemplate: (info) => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')
   },
