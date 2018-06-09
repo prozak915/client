@@ -42,7 +42,7 @@ const openTab = (wrapper, index) => {
 describe('<Browser />', () => {
   it('renders all tabs', () => {
     const wrapper = mountBrowser();
-    expect(wrapper.find(DAppContainer).length).toBe(2);
+    expect(wrapper.find(DAppContainer)).toHaveLength(2);
   });
 
   it("only marks the activeSessionId's dapp as active", () => {
@@ -60,8 +60,8 @@ describe('<Browser />', () => {
 
   it('does not remove the webview from the DOM when changing tabs', () => {
     const wrapper = mountBrowser();
-    expect(wrapper.find('webview').length).toBe(2);
+    expect(wrapper.find('webview')).toHaveLength(2);
     openTab(wrapper, 1);
-    expect(wrapper.find('webview').length).toBe(2);
+    expect(wrapper.find('webview')).toHaveLength(2);
   });
 });
