@@ -4,15 +4,16 @@ import path from 'path';
 import url from 'url';
 
 import registerNosProtocol from './util/registerNosProtocol';
-import registerAboutProtocol from './util/registerAboutProtocol';
 import pkg from '../../package.json';
 
-protocol.registerStandardSchemes(['nos']);
-
-function registerProtocol() {
-  registerNosProtocol();
-  registerAboutProtocol();
+// This wouldn't be necessary if we could call `electron-webpack` directly.  But since we have to
+// use webpack-cli (as a result of using a custom webpack config), we are faking this env var
+// already being assigned.
+if (isDev) {
+  process.env.ELECTRON_WEBPACK_WDS_PORT = process.env.ELECTRON_WEBPACK_WDS_PORT || 9080;
 }
+
+protocol.registerStandardSchemes(['nos']);
 
 function injectHeaders() {
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
@@ -46,10 +47,7 @@ const isMac = process.platform === 'darwin';
 function createWindow() {
   const framelessConfig = isMac ? { titleBarStyle: 'hidden' } : { frame: false };
 
-  const iconPath = path.join(
-    app.getAppPath(),
-    '/public/icons/icon1024x1024.png'
-  );
+  const iconPath = path.join(__static, 'icons', 'icon1024x1024.png');
 
   mainWindow = new BrowserWindow(
     Object.assign({ width: 1250, height: 700, show: false, icon: iconPath }, framelessConfig)
@@ -70,19 +68,23 @@ function createWindow() {
     icon: iconPath
   });
 
+  console.log('PORT:', process.env.ELECTRON_WEBPACK_WDS_PORT);
+
   splashWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, 'splash.html'),
-      protocol: 'file:',
-      slashes: true
-    })
+    isDev ?
+      `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/splash.html` :
+      url.format({
+        pathname: path.join(__static, 'splash.html'),
+        protocol: 'file:',
+        slashes: true
+      })
   );
 
   mainWindow.loadURL(
     isDev ?
       `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}` :
       url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: path.join(__static, 'index.html'),
         protocol: 'file:',
         slashes: true
       })
@@ -104,7 +106,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  registerProtocol();
+  registerNosProtocol();
   injectHeaders();
 
   if (isDev) {

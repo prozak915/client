@@ -1,4 +1,4 @@
-import electron from 'electron';
+import isDev from 'electron-is-dev';
 import path from 'path';
 import { resolve as resolveURL, format as formatURL } from 'url';
 import { rpc, u } from '@cityofzion/neon-js';
@@ -21,11 +21,11 @@ export default async function resolve(url) {
   if (isNOS(host)) {
     const filename = pathname === '/' ? 'welcome.html' : pathname;
 
-    if (process.env.ELECTRON_START_URL) {
-      return resolveURL(process.env.ELECTRON_START_URL, filename);
+    if (isDev) {
+      return resolveURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`, filename);
     } else {
       return formatURL({
-        pathname: path.join(electron.getAppPath(), filename),
+        pathname: path.join(__static, filename),
         protocol: 'file:',
         slashes: false
       });

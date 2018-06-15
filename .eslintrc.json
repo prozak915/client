@@ -10,6 +10,9 @@
   "plugins": [
     "jest"
   ],
+  "globals": {
+    "__static": true
+  },
   "rules": {
     "arrow-body-style": ["off"],
     "arrow-parens": ["error", "always"],
