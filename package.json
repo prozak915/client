@@ -41,15 +41,16 @@
     "what-input": "5.0.5"
   },
   "scripts": {
-    "start": "yarn start:main && concurrently -r \"yarn start:renderer\" \"wait-on http://localhost:9080/ && yarn start:electron\" --kill-others --success first",
-    "start:main": "electron-webpack main",
+    "start": "yarn build:main && concurrently -r \"yarn start:renderer\" \"wait-on http://localhost:9080/ && yarn start:electron\" --kill-others --success first",
     "start:renderer": "webpack-dev-server --config config/webpack.renderer.js",
     "start:electron": "electron .",
-    "build": "electron-webpack",
+    "build": "yarn build:main && yarn build:renderer",
+    "build:main": "electron-webpack main",
+    "build:renderer": "cross-env NODE_ENV=production webpack --config config/webpack.renderer.js",
     "dist": "yarn run build && cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder",
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "pretest": "yarn run lint",
-    "test": "jest --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
+    "test": "cross-env ELECTRON_RUN_AS_NODE=true electron ./node_modules/.bin/jest --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
     "lint": "eslint --env browser,node,server --ext .jsx,.js --color .",
     "lint:fix": "yarn run lint --fix",
     "clean": "rimraf build dist",
@@ -100,10 +101,10 @@
   "build": {
     "appId": "io.nos.desktop",
     "win": {
-      "icon": "./public/icons/icon1024x1024.ico"
+      "icon": "./static/icons/icon1024x1024.ico"
     },
     "directories": {
-      "buildResources": "public"
+      "buildResources": "static"
     },
     "extends": null
   },
@@ -124,6 +125,9 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest",
       "^.+\\.(css|scss|less)$": "jest-css-modules"
+    },
+    "moduleNameMapper": {
+      "^[./a-zA-Z0-9$_-]+\\.(css|svg)$": "<rootDir>/__mocks__/fileMock.js"
     },
     "moduleDirectories": [
       "node_modules"

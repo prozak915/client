@@ -68,8 +68,6 @@ function createWindow() {
     icon: iconPath
   });
 
-  console.log('PORT:', process.env.ELECTRON_WEBPACK_WDS_PORT);
-
   splashWindow.loadURL(
     isDev ?
       `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/splash.html` :

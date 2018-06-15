@@ -13,8 +13,11 @@
   ],
   "env": {
     "test": {
-      "presets": ["react"],
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "presets": ["env", "react"],
+      "plugins": [
+        "transform-class-properties",
+        "transform-es2015-modules-commonjs"
+      ]
     }
   }
 }
