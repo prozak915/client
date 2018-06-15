@@ -103,6 +103,11 @@
     "win": {
       "icon": "./static/icons/icon1024x1024.ico"
     },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
     "directories": {
       "buildResources": "static"
     },
