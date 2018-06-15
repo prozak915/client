@@ -49,7 +49,7 @@
     "dist": "yarn run build && cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder",
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "pretest": "yarn run lint",
-    "test": "NODE_ENV=test webpack --config config/webpack.renderer.babel.js && jest --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
+    "test": "jest --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
     "lint": "eslint --env browser,node,server --ext .jsx,.js --color .",
     "lint:fix": "yarn run lint --fix",
     "clean": "rimraf build dist",
@@ -57,13 +57,14 @@
   },
   "devDependencies": {
     "babel-eslint": "8.2.2",
+    "babel-jest": "23.0.1",
     "babel-plugin-module-resolver": "3.1.1",
     "babel-plugin-syntax-dynamic-import": "6.18.0",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-es2015-classes": "6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-react": "6.24.1",
-    "concurrently": "^3.5.1",
+    "concurrently": "3.5.1",
     "cross-env": "5.1.3",
     "css-loader": "0.28.11",
     "electron": "2.0.0",
@@ -80,6 +81,7 @@
     "eslint-plugin-jest": "21.17.0",
     "eslint-plugin-jsx-a11y": "6.0.3",
     "eslint-plugin-react": "7.7.0",
+    "jest": "23.1.0",
     "node-loader": "0.6.0",
     "node-sass": "4.9.0",
     "react-hot-loader": "4.2.0",
@@ -90,7 +92,7 @@
     "sass-loader": "7.0.2",
     "style-loader": "0.21.0",
     "svg-react": "1.0.9",
-    "wait-on": "^2.1.0",
+    "wait-on": "2.1.0",
     "webpack": "3.11.0",
     "webpack-cli": "3.0.6",
     "webpack-dev-server": "2.11.1"
@@ -116,6 +118,15 @@
     "ignore": [
       "webpack",
       "redux"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.(css|scss|less)$": "jest-css-modules"
+    },
+    "moduleDirectories": [
+      "node_modules"
     ]
   }
 }
