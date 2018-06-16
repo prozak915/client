@@ -6,8 +6,6 @@ export default function getStaticPath() {
     // The `__static` global doesn't match what it should in development.  Instead, it includes an
     // unexpected `node_modules` path, specifically:
     // node_modules/electron/dist/Electron.app/Contents/Resources/static
-    console.log('static variable:', __static);
-    console.log('static path.join:', path.join(__dirname, '..', '..', 'static'));
     return path.join(__dirname, '..', '..', 'static');
   } else {
     // The `__static` global doesn't match what it should in production.  There's a long outstanding

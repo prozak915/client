@@ -104,16 +104,8 @@
       "icon": "./static/icons/icon1024x1024.ico"
     },
     "files": [
-      "dist/main/**/*",
-      "dist/renderer/**/*",
-      "node_modules/**/*",
-      "static/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "buildResources": "build"
-    },
-    "extends": null
+      "static/**/*"
+    ]
   },
   "electronWebpack": {
     "title": "nOS",

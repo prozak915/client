@@ -70,8 +70,6 @@ function createWindow() {
     icon: iconPath
   });
 
-  console.log('SPLASH PATH:', path.join(getStaticPath(), 'splash.html'));
-
   splashWindow.loadURL(
     isDev ?
       `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/splash.html` :
@@ -86,7 +84,7 @@ function createWindow() {
     isDev ?
       `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}` :
       url.format({
-        pathname: path.join(__dirname, '..', 'renderer', 'index.html'),
+        pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
       })
