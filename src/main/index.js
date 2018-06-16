@@ -3,6 +3,8 @@ import isDev from 'electron-is-dev';
 import path from 'path';
 import url from 'url';
 
+import getStaticPath from 'getStaticPath';
+
 import registerNosProtocol from './util/registerNosProtocol';
 import pkg from '../../package.json';
 
@@ -47,7 +49,7 @@ const isMac = process.platform === 'darwin';
 function createWindow() {
   const framelessConfig = isMac ? { titleBarStyle: 'hidden' } : { frame: false };
 
-  const iconPath = path.join(__static, 'icons', 'icon1024x1024.png');
+  const iconPath = path.join(getStaticPath(), 'icons', 'icon1024x1024.png');
 
   mainWindow = new BrowserWindow(
     Object.assign({ width: 1250, height: 700, show: false, icon: iconPath }, framelessConfig)
@@ -68,11 +70,13 @@ function createWindow() {
     icon: iconPath
   });
 
+  console.log('SPLASH PATH:', path.join(getStaticPath(), 'splash.html'));
+
   splashWindow.loadURL(
     isDev ?
       `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/splash.html` :
       url.format({
-        pathname: path.join(__static, 'splash.html'),
+        pathname: path.join(getStaticPath(), 'splash.html'),
         protocol: 'file:',
         slashes: true
       })
@@ -82,7 +86,7 @@ function createWindow() {
     isDev ?
       `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}` :
       url.format({
-        pathname: path.join(__static, 'index.html'),
+        pathname: path.join(__dirname, '..', 'renderer', 'index.html'),
         protocol: 'file:',
         slashes: true
       })

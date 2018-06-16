@@ -47,7 +47,7 @@
     "build": "yarn build:main && yarn build:renderer",
     "build:main": "electron-webpack main",
     "build:renderer": "cross-env NODE_ENV=production webpack --config config/webpack.renderer.js",
-    "dist": "yarn run build && cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder",
+    "dist": "yarn run clean && yarn run build && cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder",
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "pretest": "yarn run lint",
     "test": "cross-env ELECTRON_RUN_AS_NODE=true electron ./node_modules/.bin/jest --env=jsdom --testMatch \"**/__tests__/**/*.test.{js,jsx,mjs}\" --setupTestFrameworkScriptFile \"./__tests__/setupTests.js\"",
@@ -104,12 +104,14 @@
       "icon": "./static/icons/icon1024x1024.ico"
     },
     "files": [
-      "dist/**/*",
+      "dist/main/**/*",
+      "dist/renderer/**/*",
       "node_modules/**/*",
+      "static/**/*",
       "package.json"
     ],
     "directories": {
-      "buildResources": "static"
+      "buildResources": "build"
     },
     "extends": null
   },

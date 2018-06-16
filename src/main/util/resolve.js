@@ -3,6 +3,8 @@ import path from 'path';
 import { resolve as resolveURL, format as formatURL } from 'url';
 import { rpc, u } from '@cityofzion/neon-js';
 
+import getStaticPath from 'getStaticPath';
+
 // TODO: Configurable network settings and script hash
 const NS_SCRIPT_HASH = '0xe60a3fa8149a853eb4dff4f6ed93c931646a9e22';
 const RPC_URL = 'http://localhost:30333';
@@ -25,7 +27,7 @@ export default async function resolve(url) {
       return resolveURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`, filename);
     } else {
       return formatURL({
-        pathname: path.join(__static, filename),
+        pathname: path.join(getStaticPath(), filename),
         protocol: 'file:',
         slashes: false
       });
